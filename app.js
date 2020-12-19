@@ -73,7 +73,7 @@ app.post('/users', (req, res) => {
     var token = jwt.sign({userid:req.body._id }, process.env.secret, {
       expiresIn: 86400 // expires in 24 hours
       });
-      console.log(token)
+      
     user.save().then((user) => res.send(user+'\n'+token)).catch((err) => console.log('Exception Occured ', err));;
 });
 
@@ -101,19 +101,44 @@ app.get('/users',verifyToken,(req,res)=>{
     }
 })
 
+function sortFunction(a,b){  
+    var dateA = new Date(a.date).getTime();
+    var dateB = new Date(b.date).getTime();
+    return dateA > dateB ? -1 : 1;  
+}; 
+
+app.get('/users/message',(req,res)=>{
+    const id=req.query._id;
+    User.findById(id).then((result)=>{
+        if(!result){
+            res.status(404).send("No message send by this user");
+            return;
+        }else{
+            let msgDetail=result.senderMsgDetails;
+            let receiverMsgDetail=result.receiverMsgDetails;
+            
+            Array.prototype.push.apply(msgDetail,receiverMsgDetail); 
+           msgDetail.sort(sortFunction)
+        res.send(result.senderMsgDetails);
+        }
+    })
+    
+})
+
 app.patch('/users/message',verifyToken,(req,res)=>{
     const senderId=req.query.senderId;
     const receiverId=req.body.receiverId;
     const message=req.body.message;
+    const date=new Date();
     let output;
-    User.findByIdAndUpdate(senderId, { "$push": { "senderMsgDetails":{"id":receiverId,"message":message} } },{new:true}).then((result)=>{
+    User.findByIdAndUpdate(senderId, { "$push": { "senderMsgDetails":{"id":receiverId,"message":message,"date":date} } },{new:true}).then((result)=>{
         if(!result){
             res.status(404).send("User does not exist");
             return;
         }
         output=result;
     })
-User.findByIdAndUpdate(receiverId, { "$push": { "receiverMsgDetails":{"id":senderId,"message":message} } },{new:true}).then((result)=>{
+User.findByIdAndUpdate(receiverId, { "$push": { "receiverMsgDetails":{"id":senderId,"message":message,"date":date} } },{new:true}).then((result)=>{
         if(!result){
             res.status(404).send("User does not exist");
             return;
