@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const postsSchema = require("./Modals/postsSchema");
+const postsSchema = require("./Models/postSchema");
 const app = express();
-const verifyToken = require("./middleware/verify");
+const verifyToken = require("./middleware/verifyToken");
 const jwt = require("jsonwebtoken");
-const userSchema = require("./Modals/userSchema");
+const userSchema = require("./Models/userSchema");
 const getInfo = require("./middleware/getInfo");
 mongoose
   .connect("mongodb://localhost/PostDB", {
