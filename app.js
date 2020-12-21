@@ -2,9 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const postsSchema = require("./Modals/postsSchema");
 const app = express();
-const verifyToken = require("./jwt/verify");
+const verifyToken = require("./middleware/verify");
 const jwt = require("jsonwebtoken");
 const userSchema = require("./Modals/userSchema");
+const getInfo = require("./middleware/getInfo");
 mongoose
   .connect("mongodb://localhost/PostDB", {
     useUnifiedTopology: true,
@@ -122,7 +123,7 @@ app.delete("/posts", verifyToken, (req, res) => {
   });
 });
 
-app.get("/posts", verifyToken, (req, res) => {
+app.get("/posts", [getInfo, verifyToken], (req, res) => {
   Post.find().then((result) => {
     if (!result) {
       res.status(404).send("There is no posts in database");
