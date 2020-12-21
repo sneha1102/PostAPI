@@ -4,8 +4,9 @@ const postsSchema = new mongoose.Schema({
     userName:String,
     description: String,
     _id: Number,
-    likes: { type: Number, default: 0 },
-    comments: [String],
+    likes:{type :Number,default :0},
+    likeDetails: [{ type: Object, default: {} }],
+    comments: [{type:Object,default:{}}],
    image:String,
    postDate:{ type: Date, default: Date.now }
 })
