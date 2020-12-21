@@ -169,11 +169,11 @@ app.get("/users", verifyToken, (req, res) => {
   }
 });
 
-function sortFunction(a, b) {
-  var dateA = new Date(a.date).getTime();
-  var dateB = new Date(b.date).getTime();
-  return dateA > dateB ? -1 : 1;
-}
+// function sortFunction(a, b) {
+//   var dateA = new Date(a.date).getTime();
+//   var dateB = new Date(b.date).getTime();
+//   return dateA > dateB ? -1 : 1;
+// }
 
 app.get("/users/message", (req, res) => {
   const id = req.query._id;
