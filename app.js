@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const apiCalls = require("./apiCalls/index");
+const apiCall = require("./apiCall/index");
 
 mongoose
   .connect("mongodb://localhost/PostDB", {
@@ -10,4 +10,4 @@ mongoose
   .then(() => console.log("Connected To mongodb"))
   .catch((err) => res.send({ error: err }));
 
-apiCalls();
+apiCall();
