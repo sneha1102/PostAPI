@@ -16,14 +16,18 @@ exports.addNewUser = function (req, res) {
 //to get all message by time
 exports.getAllMessageByTime = function (req, res) {
   const id = req.params.userId;
-  User.findById(id).then((result) => {
-    if (!result) {
-      res.status(404).send({ message: "No message send/receive by this user" });
-      return;
-    } else {
-      res.send({ MessageDetails: result.msgDetails });
-    }
-  });
+  User.findOne({ _id: id })
+    .populate("msgDetails.id")
+    .then((result) => {
+      if (!result) {
+        res
+          .status(404)
+          .send({ message: "No message send/receive by this user" });
+        return;
+      } else {
+        res.send({ result: result });
+      }
+    });
 };
 
 //to send message
