@@ -7,12 +7,17 @@ const getInfo = require("../middleware/getInfo");
 const bodyParser = require("body-parser");
 const app = express();
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//express configuration
+exports.expressServer = function () {
+  app.use(express.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.listen(3000, () => console.log("Listening"));
+};
 
 //Api calls
-function apiCall() {
-  //to create new post
+
+//to create new post
+exports.addNewPost = function () {
   app.post("/posts", verifyToken, (req, res) => {
     const post = new Post(req.body);
     post
@@ -25,23 +30,14 @@ function apiCall() {
       )
       .catch((err) => res.send({ error: err }));
   });
+};
 
-  //to add new comment to a post
+//to add new comment to a post
+exports.addNewComment = function () {
   app.patch("/posts/:postId/comments", verifyToken, async (req, res) => {
     const userId = req.body.userId;
     const postId = req.params.postId;
-    // let name = "";
     const date = new Date();
-    // await User.findById(userId)
-    //   .select("username")
-    //   .then((result) => {
-    //     if (!result) {
-    //       res.status(404).send("User does not exist");
-    //       return;
-    //     }
-    //     name = result.username;
-    //   });
-
     Post.findByIdAndUpdate(
       postId,
 
@@ -68,25 +64,16 @@ function apiCall() {
       res.send({ result: result });
     });
   });
+};
 
-  //to like a post
+//to like a post
+exports.likePost = function () {
   app.patch("/posts/:postId", verifyToken, async (req, res) => {
     const isLiked = req.body.like;
     if (isLiked) {
       const userId = req.body.userId;
       const postId = req.params.postId;
-      //let name = "";
       const date = new Date();
-      // await User.findById(userId)
-      //   .select("username")
-      //   .then((result) => {
-      //     if (!result) {
-      //       res.status(404).send("User does not exist");
-      //       return;
-      //     }
-      //     name = result.username;
-      //   });
-
       Post.findByIdAndUpdate(
         postId,
 
@@ -114,8 +101,10 @@ function apiCall() {
       });
     }
   });
+};
 
-  //to delete a post
+//to delete a post
+exports.deletePost = function () {
   app.delete("/posts/:postId", verifyToken, (req, res) => {
     const postId = req.params.postId;
     Post.findByIdAndDelete(postId).then((result) => {
@@ -126,8 +115,10 @@ function apiCall() {
       res.send({ result: result });
     });
   });
+};
 
-  //to get all posts
+//to get all posts
+exports.getAllPost = function () {
   app.get("/posts", [getInfo, verifyToken], (req, res) => {
     Post.find().then((result) => {
       if (!result) {
@@ -137,8 +128,10 @@ function apiCall() {
       res.send({ result: result });
     });
   });
+};
 
-  //to create new user
+//to create new user
+exports.addNewUser = function () {
   app.post("/users", (req, res) => {
     const user = new User(req.body);
     user
@@ -149,38 +142,10 @@ function apiCall() {
       expiresIn: 86400, // expires in 24 hours
     });
   });
+};
 
-  // app.get("/users", verifyToken, (req, res) => {
-  //   const senderId = req.query.senderId;
-  //   const receiverId = req.query.receiverId;
-  //   if (senderId) {
-  //     User.findById(senderId).then((result) => {
-  //       if (!result) {
-  //         res.status(404).send("No message send by this user");
-  //         return;
-  //       } else {
-  //         res.send(result.senderMsgDetails);
-  //       }
-  //     });
-  //   } else if (receiverId) {
-  //     User.findById(receiverId).then((result) => {
-  //       if (!result) {
-  //         res.status(404).send("No message received by this user");
-  //         return;
-  //       } else {
-  //         res.send(result.receiverMsgDetails);
-  //       }
-  //     });
-  //   }
-  // });
-
-  // function sortFunction(a, b) {
-  //   var dateA = new Date(a.date).getTime();
-  //   var dateB = new Date(b.date).getTime();
-  //   return dateA > dateB ? -1 : 1;
-  // }
-
-  //to get all message (send/receive) by particular user
+//to get all message by time
+exports.getAllMessageByTime = function (params) {
   app.get("/users/:userId/messages", (req, res) => {
     const id = req.params.userId;
     User.findById(id).then((result) => {
@@ -194,37 +159,16 @@ function apiCall() {
       }
     });
   });
+};
 
-  //to get all msg by time
+//to send message
+exports.sendMessage = function () {
   app.patch("/users/:senderId/messages", verifyToken, async (req, res) => {
     const senderId = req.params.senderId;
     const receiverId = req.body.receiverId;
     const message = req.body.message;
     const date = new Date();
     let output;
-    // senderName = "",
-    //receiverName = "";
-
-    // await User.findById(receiverId)
-    //   .select("username")
-    //   .then((result) => {
-    //     if (!result) {
-    //       res.status(404).send({message:"User does not exist"});
-    //       return;
-    //     }
-    //     receiverName = result.username;
-    //   });
-
-    // await User.findById(senderId)
-    //   .select("username")
-    //   .then((result) => {
-    //     if (!result) {
-    //       res.status(404).send({message:"User does not exist"});
-    //       return;
-    //     }
-    //     senderName = result.username;
-    //   });
-
     User.findByIdAndUpdate(
       senderId,
       {
@@ -281,7 +225,4 @@ function apiCall() {
         res.send({ message: output });
       });
   });
-
-  app.listen(3000, () => console.log("Listening"));
-}
-module.exports = apiCall;
+};

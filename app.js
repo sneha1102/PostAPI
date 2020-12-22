@@ -1,5 +1,15 @@
 const mongoose = require("mongoose");
-const apiCall = require("./apiCall/index");
+const {
+  expressServer,
+  addNewUser,
+  addNewPost,
+  sendMessage,
+  getAllMessageByTime,
+  getAllPost,
+  likePost,
+  addNewComment,
+  deletePost,
+} = require("./route/index");
 
 mongoose
   .connect("mongodb://localhost/PostDB", {
@@ -10,4 +20,13 @@ mongoose
   .then(() => console.log("Connected To mongodb"))
   .catch((err) => res.send({ error: err }));
 
-apiCall();
+expressServer();
+
+addNewUser();
+addNewPost();
+addNewComment();
+likePost();
+getAllPost();
+deletePost();
+sendMessage();
+getAllMessageByTime();
