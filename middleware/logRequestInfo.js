@@ -1,4 +1,4 @@
-function getInfo(req, res, next) {
+function logRequestInfo(req, res, next) {
   const url = req.url;
   const method = req.method;
   const content = req.body;
@@ -12,4 +12,4 @@ function getInfo(req, res, next) {
   console.log(output);
   next();
 }
-module.exports = getInfo;
+module.exports = logRequestInfo;
