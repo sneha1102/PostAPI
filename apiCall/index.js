@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Api calls
-function apiCalls() {
+function apiCall() {
   //to create new post
   app.post("/posts", verifyToken, (req, res) => {
     const post = new Post(req.body);
@@ -284,4 +284,4 @@ function apiCalls() {
 
   app.listen(3000, () => console.log("Listening"));
 }
-module.exports = apiCalls;
+module.exports = apiCall;
