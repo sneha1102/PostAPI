@@ -14,18 +14,13 @@ exports.addNewUser = function (req, res) {
   });
 };
 
-//sort function
-function sortFunction(a, b) {
-  var dateA = new Date(a.createdAt).getTime();
-  var dateB = new Date(b.createdAt).getTime();
-  return dateA > dateB ? -1 : 1;
-}
-
 //to get all message by time
 exports.getAllMessageByTime = function (req, res) {
   const userId = req.params.userId;
-  Message.find({ $or: [{ senderId: userId }, { receiverId: userId }] })
-    .sort([["createdAt", -1]])
+  Message.find({ $or: [{ senderId: userId }, { receiverId: userId }] }, null, {
+    sort: { createdAt: -1 },
+  })
+
     .populate("receiverId")
     .populate("senderId")
     .then((result) => {
@@ -35,7 +30,6 @@ exports.getAllMessageByTime = function (req, res) {
           .send({ message: "No message send/receive by this user" });
         return;
       } else {
-        // result.sort(sortFunction);
         res.send({ result: result });
       }
     });
