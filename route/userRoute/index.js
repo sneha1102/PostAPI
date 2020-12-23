@@ -25,6 +25,7 @@ function sortFunction(a, b) {
 exports.getAllMessageByTime = function (req, res) {
   const userId = req.params.userId;
   Message.find({ $or: [{ senderId: userId }, { receiverId: userId }] })
+    .sort([["createdAt", -1]])
     .populate("receiverId")
     .populate("senderId")
     .then((result) => {
@@ -34,10 +35,8 @@ exports.getAllMessageByTime = function (req, res) {
           .send({ message: "No message send/receive by this user" });
         return;
       } else {
-        let output = result;
-        const arrayOfObj = Object.entries(output).map((e) => e[1]);
-        arrayOfObj.sort(sortFunction);
-        res.send({ result: arrayOfObj });
+        // result.sort(sortFunction);
+        res.send({ result: result });
       }
     });
 };
