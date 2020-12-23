@@ -12,6 +12,7 @@ const {
   getAllPost,
   likePost,
   addNewComment,
+  getAllComment,
   deletePost,
   updatePost,
 } = require("./route/postRoute/index");
@@ -47,6 +48,11 @@ app.patch("/posts/:postId", verifyToken, (req, res) => {
 //to add new comment to a post
 app.post("/posts/:postId/comments", verifyToken, (req, res) => {
   addNewComment(req, res);
+});
+
+//to get all comments of particular post
+app.get("/posts/:postId/comments", verifyToken, (req, res) => {
+  getAllComment(req, res);
 });
 
 //to like a post

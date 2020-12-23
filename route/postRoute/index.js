@@ -48,6 +48,21 @@ exports.addNewComment = function (req, res) {
     .catch((err) => res.send({ error: err }));
 };
 
+//to get all comments of particular post
+exports.getAllComment = function (req, res) {
+  const postId = req.params.postId;
+  Comment.find({ postId: postId })
+    .populate("commentedBy")
+    .then((result) => {
+      if (!result) {
+        res.status(404).send({ message: "Post doesn't exist" });
+        return;
+      } else {
+        res.send({ result: result });
+      }
+    });
+};
+
 //to like a post
 exports.likePost = function (req, res) {
   const isLiked = req.body.isLiked;
