@@ -31,8 +31,7 @@ mongoose
   .then(() => console.log("Connected To mongodb"))
   .catch((err) => res.send({ error: err }));
 
-//app.use(express.json());
-//app.use(bodyParser.urlencoded({ extended: true }));
+//server listening on port 3000
 app.listen(3000, () => console.log("Listening"));
 
 //to create new post
