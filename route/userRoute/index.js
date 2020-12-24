@@ -86,9 +86,8 @@ exports.sendMessage = function (req, res) {
   const senderId = req.params.senderId;
   req.body.senderId = senderId;
   const receiverId = req.body.receiverId;
-  let roomId = senderId + receiverId;
-  roomId = roomId.split("").sort().join("");
-  req.body.roomId = roomId;
+
+  req.body.roomId = [senderId, receiverId].sort().join("");
   const message = new Message(req.body);
   message
     .save()
