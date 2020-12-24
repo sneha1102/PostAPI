@@ -71,7 +71,7 @@ exports.getAllMessageByTime = function (req, res) {
         createdAt: { $first: "$createdAt" },
       },
     },
-    { $sort: { createdAt: -1 } },
+    // { $sort: { createdAt: -1 } },
   ]).then((result) => {
     if (!result) {
       res.status(404).send({ message: "No message send/receive by this user" });
