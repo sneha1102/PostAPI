@@ -20,17 +20,13 @@ exports.addNewUser = function (req, res) {
 
 //to get all message by time
 exports.getAllMessageByTime = function (req, res) {
-  const userId = req.params.userId;
-
   Message.aggregate([
     {
       $match: {
-        $expr: {
-          $or: [
-            { senderId: mongoose.types.ObjectId(userId) },
-            { receiverId: mongoose.types.ObjectId(userId) },
-          ],
-        },
+        $or: [
+          { senderId: mongoose.Types.ObjectId(req.params.userId) },
+          { receiverId: mongoose.Types.ObjectId(req.params.userId) },
+        ],
       },
     },
     {
@@ -45,24 +41,24 @@ exports.getAllMessageByTime = function (req, res) {
     },
     { $sort: { createdAt: -1 } },
 
-    // {
-    //   $lookup: {
-    //     from: "users",
-    //     localField: "senderId",
-    //     foreignField: "_id",
-    //     as: "resultingSenderUser",
-    //   },
-    // },
-    // {
-    //   $lookup: {
-    //     from: "users",
-    //     localField: "receiverId",
-    //     foreignField: "_id",
-    //     as: "resultingReceiverUser",
-    //   },
-    // },
-    // { $unwind: { path: "$resultingSenderUser" } },
-    // { $unwind: { path: "$resultingReceiverUser" } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "senderId",
+        foreignField: "_id",
+        as: "resultingSenderUser",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "receiverId",
+        foreignField: "_id",
+        as: "resultingReceiverUser",
+      },
+    },
+    { $unwind: { path: "$resultingSenderUser" } },
+    { $unwind: { path: "$resultingReceiverUser" } },
 
     {
       $group: {
@@ -74,7 +70,7 @@ exports.getAllMessageByTime = function (req, res) {
       },
     },
 
-    // { $sort: { createdAt: -1 } },
+    { $sort: { createdAt: -1 } },
   ]).then((result) => {
     if (!result) {
       res.status(404).send({ message: "No message send/receive by this user" });
