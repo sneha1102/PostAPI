@@ -13,7 +13,7 @@ function verifyToken(req, res, next) {
         const id = decodedToken.userid;
         User.findOne({ _id: id }).then((result) => {
           if (!result) {
-            res.status(404).send({ message: "token doesn't match" });
+            res.status(404).send({ message: "user doesn't exist" });
             return;
           } else {
             next();
