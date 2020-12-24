@@ -44,24 +44,26 @@ exports.getAllMessageByTime = function (req, res) {
       },
     },
     { $sort: { createdAt: -1 } },
-    {
-      $lookup: {
-        from: "users",
-        localField: "senderId",
-        foreignField: "_id",
-        as: "resultingSenderUser",
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "receiverId",
-        foreignField: "_id",
-        as: "resultingReceiverUser",
-      },
-    },
-    { $unwind: { path: "$resultingSenderUser" } },
-    { $unwind: { path: "$resultingReceiverUser" } },
+
+    // {
+    //   $lookup: {
+    //     from: "users",
+    //     localField: "senderId",
+    //     foreignField: "_id",
+    //     as: "resultingSenderUser",
+    //   },
+    // },
+    // {
+    //   $lookup: {
+    //     from: "users",
+    //     localField: "receiverId",
+    //     foreignField: "_id",
+    //     as: "resultingReceiverUser",
+    //   },
+    // },
+    // { $unwind: { path: "$resultingSenderUser" } },
+    // { $unwind: { path: "$resultingReceiverUser" } },
+
     {
       $group: {
         _id: "$roomId",
@@ -71,6 +73,7 @@ exports.getAllMessageByTime = function (req, res) {
         createdAt: { $first: "$createdAt" },
       },
     },
+
     // { $sort: { createdAt: -1 } },
   ]).then((result) => {
     if (!result) {
