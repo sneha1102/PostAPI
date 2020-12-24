@@ -27,6 +27,7 @@ mongoose
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useFindAndModify: false,
+    useCreateIndex: true,
   })
   .then(() => console.log("Connected To mongodb"))
   .catch((err) => res.send({ error: err }));
@@ -75,7 +76,7 @@ app.post("/users", (req, res) => {
 });
 
 //to get all message by time
-app.get("/users/:userId/messages", (req, res) => {
+app.get("/users/:userId/messages", verifyToken, (req, res) => {
   getAllMessageByTime(req, res);
 });
 

@@ -10,5 +10,6 @@ const commentsSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+commentsSchema.index({ postId: 1 });
 const Comment = mongoose.model("Comment", commentsSchema);
 module.exports = Comment;
