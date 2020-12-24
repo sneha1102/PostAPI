@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../model/userSchema");
 const Message = require("../../model/messageSchema");
-
+const mongoose = require("mongoose");
 //to create new user
 exports.addNewUser = function (req, res) {
   const user = new User(req.body);
@@ -26,7 +26,10 @@ exports.getAllMessageByTime = function (req, res) {
     {
       $match: {
         $expr: {
-          $or: [{ senderId: userId }, { receiverId: userId }],
+          $or: [
+            { senderId: mongoose.types.ObjectId(userId) },
+            { receiverId: mongoose.types.ObjectId(userId) },
+          ],
         },
       },
     },
