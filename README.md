@@ -16,3 +16,9 @@ Using this project following function can be implemented:-
 
 7.To like and comment on a particular post.
 
+8.To get post by id.
+
+9.To get movie or series or episode by title and year-->using axios call.
+
+Note: Redis is used for caching.
+
