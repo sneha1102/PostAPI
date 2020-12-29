@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+const { movieByYear } = require("./route/axiosRoute/index");
 const {
   addNewPost,
   getAllPost,
@@ -15,6 +15,7 @@ const {
   getAllComment,
   deletePost,
   updatePost,
+  getPostById,
 } = require("./route/postRoute/index");
 const {
   addNewUser,
@@ -46,17 +47,17 @@ app.patch("/posts/:postId", verifyToken, (req, res) => {
 });
 
 //to add new comment to a post
-app.post("/posts/:postId/comments", verifyToken, (req, res) => {
+app.post("/posts/:postId/comments", verifyToken, async (req, res) => {
   addNewComment(req, res);
 });
 
 //to get all comments of particular post
-app.get("/posts/:postId/comments", verifyToken, (req, res) => {
+app.get("/posts/:postId/comments", verifyToken, async (req, res) => {
   getAllComment(req, res);
 });
 
 //to like a post
-app.post("/posts/:postId/likes", verifyToken, (req, res) => {
+app.post("/posts/:postId/likes", verifyToken, async (req, res) => {
   likePost(req, res);
 });
 
@@ -68,6 +69,11 @@ app.delete("/posts/:postId", verifyToken, (req, res) => {
 //to get all posts
 app.get("/posts", [logRequestInfo, verifyToken], (req, res) => {
   getAllPost(req, res);
+});
+
+//to get post by id
+app.get("/posts/:postId", verifyToken, async (req, res) => {
+  getPostById(req, res);
 });
 
 //to add new user
@@ -83,4 +89,11 @@ app.get("/users/:userId/messages", verifyToken, (req, res) => {
 //to send message
 app.patch("/users/:senderId/messages", verifyToken, async (req, res) => {
   sendMessage(req, res);
+});
+
+//axios call
+
+//get movie or series or episode by title and year
+app.get("/omdb/api", async (req, res) => {
+  movieByYear(req, res);
 });
