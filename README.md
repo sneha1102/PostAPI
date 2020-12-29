@@ -7,6 +7,7 @@ Using this project following function can be implemented:-
 2.To update user's info.
 
 3.To send/receive message to/from different users.
+
 4.To create a new post.
 
 5.To update and delete a post.
